@@ -1,0 +1,4 @@
+# Yalang
+
+Yet Another LANGuage.
+
