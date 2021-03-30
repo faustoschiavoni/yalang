@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys
+
+from antlr4 import *
+
+from yalang import YalangLexer
+from yalang import YalangParser
+from yalang import YalangVisitor
+
+def main():
+    while True:
+        text = InputStream(input('> '))
+        lexer = YalangLexer(text)
+        stream = CommonTokenStream(lexer)
+        parser = YalangParser(stream)
+        expr = YalangVisitor().visit(parser.prog())
+        if not expr.err:
+            print(expr)
+
+if __name__ == '__main__':
+    sys.exit(main())
