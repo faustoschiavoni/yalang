@@ -2,21 +2,40 @@
 
 import sys
 
-from antlr4 import *
+from yalang import execute_file, execute_string
+from yalang import Scope, YalangException
 
-from yalang import YalangLexer
-from yalang import YalangParser
-from yalang import YalangVisitor
+def main(argv):
+    if len(argv) > 1:
+        try:
+            v = execute_file(argv[1])
+            if v is None:
+                return 1
+            return 0
+        except VisitException as e:
+            print(e)
 
-def main():
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.history import FileHistory
+
+    h = FileHistory(".yalang-repl_history")
+    session = PromptSession(history=h)
+
+    s = Scope()
     while True:
-        text = InputStream(input('> '))
-        lexer = YalangLexer(text)
-        stream = CommonTokenStream(lexer)
-        parser = YalangParser(stream)
-        expr = YalangVisitor().visit(parser.prog())
-        if not expr.err:
-            print(expr)
+        text = session.prompt('> ')
+        if len(text) == 0:
+            continue
+        if not text[-1] == ';':
+            text += ';'
+
+        try:
+            v = execute_string(text, scope=s, debug=True)
+            if v is not None and len(v.debug_info) > 0:
+                print(v.debug_info[-1])
+        except YalangException as e:
+            print(e)
+    return 0
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv))

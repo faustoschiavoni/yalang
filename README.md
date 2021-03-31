@@ -15,5 +15,5 @@ export PYTHONPATH=.
 Requires Python3.
 
 ```console
-pip install -r requirements.txt
+make pre
 ```

@@ -4,9 +4,6 @@ pre: requirements.txt
 test:
 	PYTHONPATH=. python -m unittest discover -v test
 
-main: bin/main.py
-	PYTHONPATH=. python bin/main.py
-
 antlr4.jar:
 	wget -O antlr4.jar https://www.antlr.org/download/antlr-4.9-complete.jar
 
