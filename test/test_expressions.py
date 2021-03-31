@@ -23,3 +23,5 @@ class TestMath(unittest.TestCase):
         self.assertEqual(self.exec("5 + 1 * 3"), '8')
         self.assertEqual(self.exec("(5 + 1) * 3"), '18')
         self.assertEqual(self.exec_error("5 + hello"), 'Binary Math on non-numeric values: 5 + hello')
+        self.assertEqual(self.exec("5.01 + 3.1"), '8.11')
+        self.assertEqual(self.exec("11 + 1.9"), '12.9')
