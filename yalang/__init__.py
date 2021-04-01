@@ -1,20 +1,28 @@
 from antlr4 import *
+from antlr4.error.ErrorListener import ErrorListener
 
 from yalang.exceptions import YalangException
 from yalang.generated.YalangLexer import YalangLexer
 from yalang.generated.YalangParser import YalangParser
 from yalang.visitor import Visitor, Scope
 
+class ParserErrorListener(ErrorListener):
+    def __init__(self):
+        self.errs = []
+
+    def syntaxError(self, recognizer, symbol, line:int, column:int, msg:str, e):
+        self.errs.append("line " + str(line) + ":" + str(column) + " " + msg)
+
+
 def execute_string(text, scope=Scope(), debug=False):
     lexer = YalangLexer(InputStream(text))
     stream = CommonTokenStream(lexer)
+    errs = ParserErrorListener()
     parser = YalangParser(stream)
+    parser.addErrorListener(errs)
     program = parser.program()
     if parser.getNumberOfSyntaxErrors() > 0:
-        # TODO: use error listeners when parsing:
-        # https://www.antlr.org/api/Java/org/antlr/v4/runtime/Recognizer.html#addErrorListener(org.antlr.v4.runtime.ANTLRErrorListener)
-        raise YalangException("Syntax errors...")
-
+        raise YalangException('\n'.join(errs.errs))
     visitor = Visitor(scope, debug=debug)
     visitor.visit(program)
     return visitor
