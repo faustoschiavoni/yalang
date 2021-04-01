@@ -71,6 +71,24 @@ class YalangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by YalangParser#fnLiteral.
+    def enterFnLiteral(self, ctx:YalangParser.FnLiteralContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#fnLiteral.
+    def exitFnLiteral(self, ctx:YalangParser.FnLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#fnCall.
+    def enterFnCall(self, ctx:YalangParser.FnCallContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#fnCall.
+    def exitFnCall(self, ctx:YalangParser.FnCallContext):
+        pass
+
+
     # Enter a parse tree produced by YalangParser#mathLow.
     def enterMathLow(self, ctx:YalangParser.MathLowContext):
         pass
@@ -104,6 +122,15 @@ class YalangListener(ParseTreeListener):
 
     # Exit a parse tree produced by YalangParser#printStmt.
     def exitPrintStmt(self, ctx:YalangParser.PrintStmtContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#returnStmt.
+    def enterReturnStmt(self, ctx:YalangParser.ReturnStmtContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#returnStmt.
+    def exitReturnStmt(self, ctx:YalangParser.ReturnStmtContext):
         pass
 
 

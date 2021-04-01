@@ -12,17 +12,23 @@ STRING : '\'' ~('\r' | '\n' | '\'')* '\'' ;
 program   : (statement ';')+ EOF;
 statement : expression
           | printStmt
+          | returnStmt
           ;
 
-expression  : NUMBER                                              #numberLiteral
-            | STRING                                              #stringLiteral
-            | ID                                                  #identifier
-            | '-' expression                                      #unaryMinus
-            | '(' expression ')'                                  #nested
-            | left=expression op=('*'|'/'|'%') right=expression   #mathHigh
-            | left=expression op=('+'|'-')     right=expression   #mathLow
-            | ID '=' expression                                   #assignment
+expression  : NUMBER                                                                #numberLiteral
+            | STRING                                                                #stringLiteral
+            | '(' ((args+=ID ',')* args+=ID)? ')' '{' (stmts+=statement ';')+ '}'   #fnLiteral
+            | ID                                                                    #identifier
+            | ID '(' ((params+=expression ',')* params+=expression)? ')'            #fnCall
+            | '-' expression                                                        #unaryMinus
+            | '(' expression ')'                                                    #nested
+            | left=expression op=('*'|'/'|'%') right=expression                     #mathHigh
+            | left=expression op=('+'|'-')     right=expression                     #mathLow
+            | ID '=' expression                                                     #assignment
             ;
 
 printStmt   : '!' expression
+            ;
+
+returnStmt  : 'return' expression
             ;

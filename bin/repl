@@ -14,6 +14,7 @@ def main(argv):
             return 0
         except YalangException as e:
             print(e)
+            return 1
 
     from prompt_toolkit import PromptSession
     from prompt_toolkit.history import FileHistory

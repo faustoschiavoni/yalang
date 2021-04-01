@@ -23,3 +23,111 @@ class TestAssignIdent(unittest.TestCase):
 
         self.assertEqual(exec_ok("a = 3; a + 4"), '7')
         self.assertEqual(exec_ok("a = b = 3; a + b"), '6')
+
+class TestFn(unittest.TestCase):
+    def test_fn_simple(self):
+        self.assertEqual(exec_ok('''
+            f = (n) {
+                return n + 1;
+            };
+            f(18)
+        '''), '19')
+
+    def test_scope_shadowing(self):
+        self.assertEqual(exec_ok('''
+            a = 5;
+            f = (n) {
+                a = 3;
+                return a + n;
+            };
+            f(a)
+        '''), '8')
+        self.assertEqual(exec_ok('''
+            a = 5;
+            f = (n) {
+                return a + n;
+            };
+            f(a)
+        '''), '10')
+        self.assertEqual(exec_ok('''
+            a = 5;
+            f = (n) {
+                a = 3;
+                return a + n;
+            };
+            b = f(a);
+            a
+        '''), '5')
+
+    def test_multi_arity(self):
+        self.assertEqual(exec_ok('''
+            a = 5;
+            f = (a, b, c) {
+                d = 2;
+                return (a + b + c) * d;
+            };
+            f(a, 2, 3)
+        '''), '20')
+        self.assertEqual(exec_ko('''
+            a = 5;
+            f = (a, b, c) {
+                d = 2;
+                return (a + b + c) * d;
+            };
+            f(a, 2)
+        '''), 'line 7:12 f requires 3 args, 2 given')
+
+    def test_dead_code(self):
+        self.assertEqual(exec_ok('''
+            f = (a, b) {
+                return a * b;
+                d = 2;
+                return error_here;
+            };
+            f(3 + 1.2, 2 * 10)
+        '''), '84.0')
+
+    def test_error_in_fn(self):
+        self.assertEqual(exec_ko('''
+            f = (a, b) {
+                return a + b;
+            };
+            f(1, 'hello')
+        '''), "line 3:23 Binary Math on non-numeric values: 1 + 'hello'")
+
+    def test_nested(self):
+        self.assertEqual(exec_ok('''
+            n = 3;
+            f = (a, b) {
+                n = 1;
+                g = (n) {
+                    return n + 1;
+                };
+                return a + g(b) + n;
+            };
+            f(n, 4)
+        '''), '9')
+        self.assertEqual(exec_ko('''
+            n = 3;
+            f = (a, b) {
+                n = 1;
+                g = (n) {
+                    return 'n' + 1;
+                };
+                return a + g(b) + n;
+            };
+            f(n, 4)
+        '''), "line 6:27 Binary Math on non-numeric values: 'n' + 1")
+
+    def test_nested_fn_shadowing(self):
+        self.assertEqual(exec_ok('''
+            n = 3;
+            f = (a, b) {
+                n = 1;
+                f = (n) {
+                    return n + 1;
+                };
+                return a + f(b) + n;
+            };
+            f(n, 4)
+        '''), '9')

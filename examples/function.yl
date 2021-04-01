@@ -1,0 +1,6 @@
+foo = (n) {
+  return n + 1;
+};
+
+a = 41;
+! foo(a);

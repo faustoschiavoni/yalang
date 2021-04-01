@@ -44,6 +44,16 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YalangParser#fnLiteral.
+    def visitFnLiteral(self, ctx:YalangParser.FnLiteralContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#fnCall.
+    def visitFnCall(self, ctx:YalangParser.FnCallContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YalangParser#mathLow.
     def visitMathLow(self, ctx:YalangParser.MathLowContext):
         return self.visitChildren(ctx)
@@ -61,6 +71,11 @@ class YalangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by YalangParser#printStmt.
     def visitPrintStmt(self, ctx:YalangParser.PrintStmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#returnStmt.
+    def visitReturnStmt(self, ctx:YalangParser.ReturnStmtContext):
         return self.visitChildren(ctx)
 
 
