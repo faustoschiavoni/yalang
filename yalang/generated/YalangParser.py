@@ -16,18 +16,18 @@ def serializedATN():
         buf.write("\n\2\r\2\16\2\17\3\2\3\2\3\3\3\3\5\3\26\n\3\3\4\3\4\3")
         buf.write("\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4%\n\4\3")
         buf.write("\4\3\4\3\4\3\4\3\4\3\4\7\4-\n\4\f\4\16\4\60\13\4\3\5\3")
-        buf.write("\5\3\5\3\5\2\3\6\6\2\4\6\b\2\4\3\2\b\n\4\2\5\5\13\13\2")
-        buf.write("9\2\r\3\2\2\2\4\25\3\2\2\2\6$\3\2\2\2\b\61\3\2\2\2\n\13")
+        buf.write("\5\3\5\3\5\2\3\6\6\2\4\6\b\2\4\3\2\7\t\4\2\4\4\n\n\29")
+        buf.write("\2\r\3\2\2\2\4\25\3\2\2\2\6$\3\2\2\2\b\61\3\2\2\2\n\13")
         buf.write("\5\4\3\2\13\f\7\3\2\2\f\16\3\2\2\2\r\n\3\2\2\2\16\17\3")
         buf.write("\2\2\2\17\r\3\2\2\2\17\20\3\2\2\2\20\21\3\2\2\2\21\22")
         buf.write("\7\2\2\3\22\3\3\2\2\2\23\26\5\6\4\2\24\26\5\b\5\2\25\23")
         buf.write("\3\2\2\2\25\24\3\2\2\2\26\5\3\2\2\2\27\30\b\4\1\2\30%")
-        buf.write("\7\17\2\2\31%\7\20\2\2\32%\7\16\2\2\33\34\7\16\2\2\34")
-        buf.write("\35\7\4\2\2\35%\5\6\4\7\36\37\7\5\2\2\37%\5\6\4\6 !\7")
-        buf.write("\6\2\2!\"\5\6\4\2\"#\7\7\2\2#%\3\2\2\2$\27\3\2\2\2$\31")
-        buf.write("\3\2\2\2$\32\3\2\2\2$\33\3\2\2\2$\36\3\2\2\2$ \3\2\2\2")
-        buf.write("%.\3\2\2\2&\'\f\4\2\2\'(\t\2\2\2(-\5\6\4\5)*\f\3\2\2*")
-        buf.write("+\t\3\2\2+-\5\6\4\4,&\3\2\2\2,)\3\2\2\2-\60\3\2\2\2.,")
+        buf.write("\7\17\2\2\31%\7\20\2\2\32%\7\16\2\2\33\34\7\4\2\2\34%")
+        buf.write("\5\6\4\7\35\36\7\5\2\2\36\37\5\6\4\2\37 \7\6\2\2 %\3\2")
+        buf.write("\2\2!\"\7\16\2\2\"#\7\13\2\2#%\5\6\4\3$\27\3\2\2\2$\31")
+        buf.write("\3\2\2\2$\32\3\2\2\2$\33\3\2\2\2$\35\3\2\2\2$!\3\2\2\2")
+        buf.write("%.\3\2\2\2&\'\f\5\2\2\'(\t\2\2\2(-\5\6\4\6)*\f\4\2\2*")
+        buf.write("+\t\3\2\2+-\5\6\4\5,&\3\2\2\2,)\3\2\2\2-\60\3\2\2\2.,")
         buf.write("\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60.\3\2\2\2\61\62\7\f\2")
         buf.write("\2\62\63\5\6\4\2\63\t\3\2\2\2\7\17\25$,.")
         return buf.getvalue()
@@ -43,8 +43,8 @@ class YalangParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "';'", "'='", "'-'", "'('", "')'", "'*'", 
-                     "'/'", "'%'", "'+'", "'!'" ]
+    literalNames = [ "<INVALID>", "';'", "'-'", "'('", "')'", "'*'", "'/'", 
+                     "'%'", "'+'", "'='", "'!'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
@@ -137,7 +137,7 @@ class YalangParser ( Parser ):
                 self.state = 13 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__2) | (1 << YalangParser.T__3) | (1 << YalangParser.T__9) | (1 << YalangParser.ID) | (1 << YalangParser.NUMBER) | (1 << YalangParser.STRING))) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__1) | (1 << YalangParser.T__2) | (1 << YalangParser.T__9) | (1 << YalangParser.ID) | (1 << YalangParser.NUMBER) | (1 << YalangParser.STRING))) != 0)):
                     break
 
             self.state = 15
@@ -193,7 +193,7 @@ class YalangParser ( Parser ):
             self.state = 19
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [YalangParser.T__2, YalangParser.T__3, YalangParser.ID, YalangParser.NUMBER, YalangParser.STRING]:
+            if token in [YalangParser.T__1, YalangParser.T__2, YalangParser.ID, YalangParser.NUMBER, YalangParser.STRING]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 17
                 self.expression(0)
@@ -481,37 +481,37 @@ class YalangParser ( Parser ):
                 pass
 
             elif la_ == 4:
-                localctx = YalangParser.AssignmentContext(self, localctx)
+                localctx = YalangParser.UnaryMinusContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 25
-                self.match(YalangParser.ID)
-                self.state = 26
                 self.match(YalangParser.T__1)
-                self.state = 27
+                self.state = 26
                 self.expression(5)
                 pass
 
             elif la_ == 5:
-                localctx = YalangParser.UnaryMinusContext(self, localctx)
-                self._ctx = localctx
-                _prevctx = localctx
-                self.state = 28
-                self.match(YalangParser.T__2)
-                self.state = 29
-                self.expression(4)
-                pass
-
-            elif la_ == 6:
                 localctx = YalangParser.NestedContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 30
-                self.match(YalangParser.T__3)
-                self.state = 31
+                self.state = 27
+                self.match(YalangParser.T__2)
+                self.state = 28
                 self.expression(0)
+                self.state = 29
+                self.match(YalangParser.T__3)
+                pass
+
+            elif la_ == 6:
+                localctx = YalangParser.AssignmentContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 31
+                self.match(YalangParser.ID)
                 self.state = 32
-                self.match(YalangParser.T__4)
+                self.match(YalangParser.T__8)
+                self.state = 33
+                self.expression(1)
                 pass
 
 
@@ -532,19 +532,19 @@ class YalangParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 36
-                        if not self.precpred(self._ctx, 2):
+                        if not self.precpred(self._ctx, 3):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 3)")
                         self.state = 37
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__5) | (1 << YalangParser.T__6) | (1 << YalangParser.T__7))) != 0)):
+                        if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__4) | (1 << YalangParser.T__5) | (1 << YalangParser.T__6))) != 0)):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 38
-                        localctx.right = self.expression(3)
+                        localctx.right = self.expression(4)
                         pass
 
                     elif la_ == 2:
@@ -552,19 +552,19 @@ class YalangParser ( Parser ):
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
                         self.state = 39
-                        if not self.precpred(self._ctx, 1):
+                        if not self.precpred(self._ctx, 2):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
                         self.state = 40
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
-                        if not(_la==YalangParser.T__2 or _la==YalangParser.T__8):
+                        if not(_la==YalangParser.T__1 or _la==YalangParser.T__7):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 41
-                        localctx.right = self.expression(2)
+                        localctx.right = self.expression(3)
                         pass
 
              
@@ -643,11 +643,11 @@ class YalangParser ( Parser ):
 
     def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 2)
+                return self.precpred(self._ctx, 3)
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 1)
+                return self.precpred(self._ctx, 2)
          
 
 

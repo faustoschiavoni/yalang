@@ -17,11 +17,11 @@ statement : expression
 expression  : NUMBER                                              #numberLiteral
             | STRING                                              #stringLiteral
             | ID                                                  #identifier
-            | ID '=' expression                                   #assignment
             | '-' expression                                      #unaryMinus
             | '(' expression ')'                                  #nested
             | left=expression op=('*'|'/'|'%') right=expression   #mathHigh
             | left=expression op=('+'|'-')     right=expression   #mathLow
+            | ID '=' expression                                   #assignment
             ;
 
 printStmt   : '!' expression
