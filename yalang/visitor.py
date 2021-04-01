@@ -1,3 +1,5 @@
+from enum import Enum
+
 from yalang.generated.YalangParser import YalangParser
 from yalang.generated.YalangVisitor import YalangVisitor
 from yalang.exceptions import YalangException
@@ -6,14 +8,20 @@ class Scope(dict):
     pass
 
 class Expression(object):
-    def __init__(self, value, err=False):
+    class Type(Enum):
+        NUMBER = 1
+        STRING = 2
+        FUNCTION = 3
+
+    def __init__(self, value, typ):
         self.value = value
-        self.err = err
+        self.typ = typ
 
     def __repr__(self):
-        if self.err:
-            return 'ERROR: {}'.format(self.value)
-        return '{}'.format(self.value)
+        return '{}:{}'.format(self.value, self.typ)
+
+    def is_number(self):
+        return self.typ == self.Type.NUMBER
 
 
 class Visitor(YalangVisitor):
@@ -38,9 +46,9 @@ class Visitor(YalangVisitor):
 
     def visitUnaryMinus(self, ctx:YalangParser.UnaryMinusContext):
         expr = self.visit(ctx.expression())
-        if not expr.value.isnumeric():
+        if not expr.is_number():
             raise Exception("Unary Math on non-numeric value: -{}", expr)
-        e = Expression('-' + expr.value)
+        e = Expression('-' + expr.value, expr.typ)
         if self.debug:
             self.debug_info.append(e)
         return e
@@ -48,16 +56,10 @@ class Visitor(YalangVisitor):
     def visitBinaryMath(self, left, op, right):
         l = self.visit(left)
         r = self.visit(right)
-        ls = l.value
-        if ls[0] == '-':
-            ls = ls[1:]
-        rs = r.value
-        if rs[0] == '-':
-            rs = rs[1:]
-        if not ls.isnumeric() or not rs.isnumeric():
-            raise YalangException("Binary Math on non-numeric values: {} {} {}".format(l, op, r))
+        if not l.is_number() or not r.is_number():
+            raise YalangException("Binary Math on non-numeric values: {} {} {}".format(l.value, op, r.value))
         r = eval(l.value + op + r.value)
-        e = Expression(str(r))
+        e = Expression(str(r), l.typ)
         if self.debug:
             self.debug_info.append(e)
         return e
@@ -69,7 +71,7 @@ class Visitor(YalangVisitor):
         return self.visitBinaryMath(ctx.left, ctx.op.text, ctx.right)
 
     def visitNumberLiteral(self, ctx:YalangParser.NumberLiteralContext):
-        e = Expression(ctx.NUMBER().getText())
+        e = Expression(ctx.NUMBER().getText(), Expression.Type.NUMBER)
         if self.debug:
             self.debug_info.append(e)
         return e
@@ -81,7 +83,8 @@ class Visitor(YalangVisitor):
         return e
 
     def visitIdentifier(self, ctx:YalangParser.IdentifierContext):
-        e = Expression(ctx.ID().getText())
+        # TODO
+        e = Expression(ctx.ID().getText(), Expression.Type.STRING)
         if self.debug:
             self.debug_info.append(e)
         return e
