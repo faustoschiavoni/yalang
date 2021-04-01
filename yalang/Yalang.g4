@@ -10,7 +10,9 @@ NUMBER  : DIGIT+ ('.' DIGIT+)?;
 STRING : '\'' ~('\r' | '\n' | '\'')* '\'' ;
 
 program   : (statement ';')+ EOF;
-statement : expression;
+statement : expression
+          | printStmt
+          ;
 
 expression  : NUMBER                                              #numberLiteral
             | STRING                                              #stringLiteral
@@ -20,4 +22,7 @@ expression  : NUMBER                                              #numberLiteral
             | '(' expression ')'                                  #nested
             | left=expression op=('*'|'/'|'%') right=expression   #mathHigh
             | left=expression op=('+'|'-')     right=expression   #mathLow
+            ;
+
+printStmt   : '!' expression
             ;

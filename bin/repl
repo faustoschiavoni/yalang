@@ -12,7 +12,7 @@ def main(argv):
             if v is None:
                 return 1
             return 0
-        except VisitException as e:
+        except YalangException as e:
             print(e)
 
     from prompt_toolkit import PromptSession

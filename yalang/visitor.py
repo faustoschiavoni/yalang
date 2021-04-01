@@ -105,3 +105,7 @@ class Visitor(YalangVisitor):
         if self.debug:
             self.debug_info.append(e)
         return e
+
+    def visitPrintStmt(self, ctx:YalangParser.PrintStmtContext):
+        e = self.visit(ctx.expression())
+        print(e.value)

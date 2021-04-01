@@ -11,23 +11,25 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\17")
-        buf.write(".\4\2\t\2\4\3\t\3\4\4\t\4\3\2\3\2\3\2\6\2\f\n\2\r\2\16")
-        buf.write("\2\r\3\2\3\2\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3")
-        buf.write("\4\3\4\3\4\3\4\3\4\5\4!\n\4\3\4\3\4\3\4\3\4\3\4\3\4\7")
-        buf.write("\4)\n\4\f\4\16\4,\13\4\3\4\2\3\6\5\2\4\6\2\4\3\2\b\n\4")
-        buf.write("\2\5\5\13\13\2\62\2\13\3\2\2\2\4\21\3\2\2\2\6 \3\2\2\2")
-        buf.write("\b\t\5\4\3\2\t\n\7\3\2\2\n\f\3\2\2\2\13\b\3\2\2\2\f\r")
-        buf.write("\3\2\2\2\r\13\3\2\2\2\r\16\3\2\2\2\16\17\3\2\2\2\17\20")
-        buf.write("\7\2\2\3\20\3\3\2\2\2\21\22\5\6\4\2\22\5\3\2\2\2\23\24")
-        buf.write("\b\4\1\2\24!\7\16\2\2\25!\7\17\2\2\26!\7\r\2\2\27\30\7")
-        buf.write("\r\2\2\30\31\7\4\2\2\31!\5\6\4\7\32\33\7\5\2\2\33!\5\6")
-        buf.write("\4\6\34\35\7\6\2\2\35\36\5\6\4\2\36\37\7\7\2\2\37!\3\2")
-        buf.write("\2\2 \23\3\2\2\2 \25\3\2\2\2 \26\3\2\2\2 \27\3\2\2\2 ")
-        buf.write("\32\3\2\2\2 \34\3\2\2\2!*\3\2\2\2\"#\f\4\2\2#$\t\2\2\2")
-        buf.write("$)\5\6\4\5%&\f\3\2\2&\'\t\3\2\2\')\5\6\4\4(\"\3\2\2\2")
-        buf.write("(%\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\7\3\2\2\2,*")
-        buf.write("\3\2\2\2\6\r (*")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\20")
+        buf.write("\65\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\6\2\16")
+        buf.write("\n\2\r\2\16\2\17\3\2\3\2\3\3\3\3\5\3\26\n\3\3\4\3\4\3")
+        buf.write("\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4%\n\4\3")
+        buf.write("\4\3\4\3\4\3\4\3\4\3\4\7\4-\n\4\f\4\16\4\60\13\4\3\5\3")
+        buf.write("\5\3\5\3\5\2\3\6\6\2\4\6\b\2\4\3\2\b\n\4\2\5\5\13\13\2")
+        buf.write("9\2\r\3\2\2\2\4\25\3\2\2\2\6$\3\2\2\2\b\61\3\2\2\2\n\13")
+        buf.write("\5\4\3\2\13\f\7\3\2\2\f\16\3\2\2\2\r\n\3\2\2\2\16\17\3")
+        buf.write("\2\2\2\17\r\3\2\2\2\17\20\3\2\2\2\20\21\3\2\2\2\21\22")
+        buf.write("\7\2\2\3\22\3\3\2\2\2\23\26\5\6\4\2\24\26\5\b\5\2\25\23")
+        buf.write("\3\2\2\2\25\24\3\2\2\2\26\5\3\2\2\2\27\30\b\4\1\2\30%")
+        buf.write("\7\17\2\2\31%\7\20\2\2\32%\7\16\2\2\33\34\7\16\2\2\34")
+        buf.write("\35\7\4\2\2\35%\5\6\4\7\36\37\7\5\2\2\37%\5\6\4\6 !\7")
+        buf.write("\6\2\2!\"\5\6\4\2\"#\7\7\2\2#%\3\2\2\2$\27\3\2\2\2$\31")
+        buf.write("\3\2\2\2$\32\3\2\2\2$\33\3\2\2\2$\36\3\2\2\2$ \3\2\2\2")
+        buf.write("%.\3\2\2\2&\'\f\4\2\2\'(\t\2\2\2(-\5\6\4\5)*\f\3\2\2*")
+        buf.write("+\t\3\2\2+-\5\6\4\4,&\3\2\2\2,)\3\2\2\2-\60\3\2\2\2.,")
+        buf.write("\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60.\3\2\2\2\61\62\7\f\2")
+        buf.write("\2\62\63\5\6\4\2\63\t\3\2\2\2\7\17\25$,.")
         return buf.getvalue()
 
 
@@ -42,17 +44,19 @@ class YalangParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "';'", "'='", "'-'", "'('", "')'", "'*'", 
-                     "'/'", "'%'", "'+'" ]
+                     "'/'", "'%'", "'+'", "'!'" ]
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "WS", "ID", "NUMBER", "STRING" ]
+                      "<INVALID>", "<INVALID>", "<INVALID>", "WS", "ID", 
+                      "NUMBER", "STRING" ]
 
     RULE_program = 0
     RULE_statement = 1
     RULE_expression = 2
+    RULE_printStmt = 3
 
-    ruleNames =  [ "program", "statement", "expression" ]
+    ruleNames =  [ "program", "statement", "expression", "printStmt" ]
 
     EOF = Token.EOF
     T__0=1
@@ -64,10 +68,11 @@ class YalangParser ( Parser ):
     T__6=7
     T__7=8
     T__8=9
-    WS=10
-    ID=11
-    NUMBER=12
-    STRING=13
+    T__9=10
+    WS=11
+    ID=12
+    NUMBER=13
+    STRING=14
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -121,21 +126,21 @@ class YalangParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 9 
+            self.state = 11 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 6
+                self.state = 8
                 self.statement()
-                self.state = 7
+                self.state = 9
                 self.match(YalangParser.T__0)
-                self.state = 11 
+                self.state = 13 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__2) | (1 << YalangParser.T__3) | (1 << YalangParser.ID) | (1 << YalangParser.NUMBER) | (1 << YalangParser.STRING))) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__2) | (1 << YalangParser.T__3) | (1 << YalangParser.T__9) | (1 << YalangParser.ID) | (1 << YalangParser.NUMBER) | (1 << YalangParser.STRING))) != 0)):
                     break
 
-            self.state = 13
+            self.state = 15
             self.match(YalangParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
@@ -154,6 +159,10 @@ class YalangParser ( Parser ):
 
         def expression(self):
             return self.getTypedRuleContext(YalangParser.ExpressionContext,0)
+
+
+        def printStmt(self):
+            return self.getTypedRuleContext(YalangParser.PrintStmtContext,0)
 
 
         def getRuleIndex(self):
@@ -181,9 +190,22 @@ class YalangParser ( Parser ):
         localctx = YalangParser.StatementContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_statement)
         try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 15
-            self.expression(0)
+            self.state = 19
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [YalangParser.T__2, YalangParser.T__3, YalangParser.ID, YalangParser.NUMBER, YalangParser.STRING]:
+                self.enterOuterAlt(localctx, 1)
+                self.state = 17
+                self.expression(0)
+                pass
+            elif token in [YalangParser.T__9]:
+                self.enterOuterAlt(localctx, 2)
+                self.state = 18
+                self.printStmt()
+                pass
+            else:
+                raise NoViableAltException(self)
+
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -430,15 +452,15 @@ class YalangParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 30
+            self.state = 34
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
             if la_ == 1:
                 localctx = YalangParser.NumberLiteralContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
 
-                self.state = 18
+                self.state = 22
                 self.match(YalangParser.NUMBER)
                 pass
 
@@ -446,7 +468,7 @@ class YalangParser ( Parser ):
                 localctx = YalangParser.StringLiteralContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 19
+                self.state = 23
                 self.match(YalangParser.STRING)
                 pass
 
@@ -454,7 +476,7 @@ class YalangParser ( Parser ):
                 localctx = YalangParser.IdentifierContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 20
+                self.state = 24
                 self.match(YalangParser.ID)
                 pass
 
@@ -462,11 +484,11 @@ class YalangParser ( Parser ):
                 localctx = YalangParser.AssignmentContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 21
+                self.state = 25
                 self.match(YalangParser.ID)
-                self.state = 22
+                self.state = 26
                 self.match(YalangParser.T__1)
-                self.state = 23
+                self.state = 27
                 self.expression(5)
                 pass
 
@@ -474,9 +496,9 @@ class YalangParser ( Parser ):
                 localctx = YalangParser.UnaryMinusContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 24
+                self.state = 28
                 self.match(YalangParser.T__2)
-                self.state = 25
+                self.state = 29
                 self.expression(4)
                 pass
 
@@ -484,36 +506,36 @@ class YalangParser ( Parser ):
                 localctx = YalangParser.NestedContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 26
+                self.state = 30
                 self.match(YalangParser.T__3)
-                self.state = 27
+                self.state = 31
                 self.expression(0)
-                self.state = 28
+                self.state = 32
                 self.match(YalangParser.T__4)
                 pass
 
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 40
+            self.state = 44
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 38
+                    self.state = 42
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
                     if la_ == 1:
                         localctx = YalangParser.MathHighContext(self, YalangParser.ExpressionContext(self, _parentctx, _parentState))
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 32
+                        self.state = 36
                         if not self.precpred(self._ctx, 2):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 2)")
-                        self.state = 33
+                        self.state = 37
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << YalangParser.T__5) | (1 << YalangParser.T__6) | (1 << YalangParser.T__7))) != 0)):
@@ -521,7 +543,7 @@ class YalangParser ( Parser ):
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 34
+                        self.state = 38
                         localctx.right = self.expression(3)
                         pass
 
@@ -529,11 +551,11 @@ class YalangParser ( Parser ):
                         localctx = YalangParser.MathLowContext(self, YalangParser.ExpressionContext(self, _parentctx, _parentState))
                         localctx.left = _prevctx
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                        self.state = 35
+                        self.state = 39
                         if not self.precpred(self._ctx, 1):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                        self.state = 36
+                        self.state = 40
                         localctx.op = self._input.LT(1)
                         _la = self._input.LA(1)
                         if not(_la==YalangParser.T__2 or _la==YalangParser.T__8):
@@ -541,14 +563,14 @@ class YalangParser ( Parser ):
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 37
+                        self.state = 41
                         localctx.right = self.expression(2)
                         pass
 
              
-                self.state = 42
+                self.state = 46
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -556,6 +578,55 @@ class YalangParser ( Parser ):
             self._errHandler.recover(self, re)
         finally:
             self.unrollRecursionContexts(_parentctx)
+        return localctx
+
+
+    class PrintStmtContext(ParserRuleContext):
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def expression(self):
+            return self.getTypedRuleContext(YalangParser.ExpressionContext,0)
+
+
+        def getRuleIndex(self):
+            return YalangParser.RULE_printStmt
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterPrintStmt" ):
+                listener.enterPrintStmt(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitPrintStmt" ):
+                listener.exitPrintStmt(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPrintStmt" ):
+                return visitor.visitPrintStmt(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def printStmt(self):
+
+        localctx = YalangParser.PrintStmtContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 6, self.RULE_printStmt)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 47
+            self.match(YalangParser.T__9)
+            self.state = 48
+            self.expression(0)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
         return localctx
 
 

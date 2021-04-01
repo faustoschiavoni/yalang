@@ -59,5 +59,10 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YalangParser#printStmt.
+    def visitPrintStmt(self, ctx:YalangParser.PrintStmtContext):
+        return self.visitChildren(ctx)
+
+
 
 del YalangParser
