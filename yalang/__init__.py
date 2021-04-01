@@ -1,7 +1,7 @@
 from antlr4 import *
 from antlr4.error.ErrorListener import ErrorListener
 
-from yalang.exceptions import YalangException
+from yalang.exceptions import ParseException, YalangException
 from yalang.generated.YalangLexer import YalangLexer
 from yalang.generated.YalangParser import YalangParser
 from yalang.visitor import Visitor, Scope
@@ -19,10 +19,11 @@ def execute_string(text, scope=Scope(), debug=False):
     stream = CommonTokenStream(lexer)
     errs = ParserErrorListener()
     parser = YalangParser(stream)
+    parser.removeErrorListeners()
     parser.addErrorListener(errs)
     program = parser.program()
     if parser.getNumberOfSyntaxErrors() > 0:
-        raise YalangException('\n'.join(errs.errs))
+        raise ParseException('\n'.join(errs.errs))
     visitor = Visitor(scope, debug=debug)
     visitor.visit(program)
     return visitor

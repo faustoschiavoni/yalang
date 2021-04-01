@@ -8,7 +8,6 @@ class TestParser(unittest.TestCase):
             execute_string(stmt)
             return None
         except YalangException as e:
-            print(e)
             return str(e)
 
     def test_ok(self):

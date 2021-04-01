@@ -2,7 +2,7 @@ from enum import Enum
 
 from yalang.generated.YalangParser import YalangParser
 from yalang.generated.YalangVisitor import YalangVisitor
-from yalang.exceptions import YalangException
+from yalang.exceptions import VisitorException
 
 class Scope(dict):
     pass
@@ -47,17 +47,18 @@ class Visitor(YalangVisitor):
     def visitUnaryMinus(self, ctx:YalangParser.UnaryMinusContext):
         expr = self.visit(ctx.expression())
         if not expr.is_number():
-            raise Exception("Unary Math on non-numeric value: -{}", expr)
+            raise VisitorException(ctx, "Unary Math on non-numeric value: -{}", expr)
         e = Expression('-' + expr.value, expr.typ)
         if self.debug:
             self.debug_info.append(e)
         return e
 
-    def visitBinaryMath(self, left, op, right):
-        l = self.visit(left)
-        r = self.visit(right)
+    def visitBinaryMath(self, ctx):
+        op = ctx.op.text
+        l = self.visit(ctx.left)
+        r = self.visit(ctx.right)
         if not l.is_number() or not r.is_number():
-            raise YalangException("Binary Math on non-numeric values: {} {} {}".format(l.value, op, r.value))
+            raise VisitorException(ctx, "Binary Math on non-numeric values: {} {} {}", l.value, op, r.value)
         r = eval(l.value + op + r.value)
         e = Expression(str(r), l.typ)
         if self.debug:
@@ -65,13 +66,19 @@ class Visitor(YalangVisitor):
         return e
 
     def visitMathHigh(self, ctx:YalangParser.MathHighContext):
-        return self.visitBinaryMath(ctx.left, ctx.op.text, ctx.right)
+        return self.visitBinaryMath(ctx)
 
     def visitMathLow(self, ctx:YalangParser.MathLowContext):
-        return self.visitBinaryMath(ctx.left, ctx.op.text, ctx.right)
+        return self.visitBinaryMath(ctx)
 
     def visitNumberLiteral(self, ctx:YalangParser.NumberLiteralContext):
         e = Expression(ctx.NUMBER().getText(), Expression.Type.NUMBER)
+        if self.debug:
+            self.debug_info.append(e)
+        return e
+
+    def visitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+        e = Expression(ctx.STRING().getText(), Expression.Type.STRING)
         if self.debug:
             self.debug_info.append(e)
         return e
@@ -82,9 +89,19 @@ class Visitor(YalangVisitor):
             self.debug_info.append(e)
         return e
 
+    def visitAssignment(self, ctx:YalangParser.AssignmentContext):
+        e = self.visit(ctx.expression())
+        ident = ctx.ID().getText()
+        self.scope[ident] = e
+        if self.debug:
+            self.debug_info.append(e)
+        return e
+
     def visitIdentifier(self, ctx:YalangParser.IdentifierContext):
-        # TODO
-        e = Expression(ctx.ID().getText(), Expression.Type.STRING)
+        ident = ctx.ID().getText()
+        e = self.scope.get(ident, None)
+        if e is None:
+            raise VisitorException(ctx, "Undefined variable {}", ident)
         if self.debug:
             self.debug_info.append(e)
         return e

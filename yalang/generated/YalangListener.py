@@ -44,6 +44,24 @@ class YalangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by YalangParser#stringLiteral.
+    def enterStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#stringLiteral.
+    def exitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#assignment.
+    def enterAssignment(self, ctx:YalangParser.AssignmentContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#assignment.
+    def exitAssignment(self, ctx:YalangParser.AssignmentContext):
+        pass
+
+
     # Enter a parse tree produced by YalangParser#unaryMinus.
     def enterUnaryMinus(self, ctx:YalangParser.UnaryMinusContext):
         pass

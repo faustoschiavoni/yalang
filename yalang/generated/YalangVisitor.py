@@ -29,6 +29,16 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YalangParser#stringLiteral.
+    def visitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#assignment.
+    def visitAssignment(self, ctx:YalangParser.AssignmentContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by YalangParser#unaryMinus.
     def visitUnaryMinus(self, ctx:YalangParser.UnaryMinusContext):
         return self.visitChildren(ctx)
