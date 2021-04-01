@@ -131,3 +131,19 @@ class TestFn(unittest.TestCase):
             };
             f(n, 4)
         '''), '9')
+
+    def test_closure(self):
+        self.assertEqual(exec_ok('''
+            n = 3;
+            f = (a, b) {
+                return a - b - n;
+            };
+            n = 4;
+            f(1, 2)
+        '''), '-4')
+
+    def test_not_callable(self):
+        self.assertEqual(exec_ko('''
+            n = 3;
+            n(1)
+        '''), "line 3:12 n is not callable")

@@ -26,18 +26,19 @@ class Expression(object):
 
 
 class Function(Expression):
-    def __init__(self, ctx, args, body):
+    def __init__(self, ctx, scope, args, body):
         self.ctx = ctx
+        self.scope = scope
         self.args = args
         self.body = body
         self.typ = self.Type.FUNCTION
 
-    def call(self, call_ctx, name, scope, params):
+    def call(self, call_ctx, name, params):
         if len(params) != len(self.args):
             raise VisitorException(call_ctx, "{} requires {} args, {} given", name, len(self.args), len(params))
         for k, v in zip(self.args, params):
-            scope[k] = v
-        v = Visitor(scope, is_fn=True)
+            self.scope[k] = v
+        v = Visitor(self.scope, is_fn=True)
         for stmt in self.body:
             v.visit(stmt)
             if v.return_value is not None:
@@ -133,7 +134,7 @@ class Visitor(YalangVisitor):
         print(e.value)
 
     def visitFnLiteral(self, ctx:YalangParser.FnLiteralContext):
-        f = Function(ctx, [arg.text for arg in ctx.args], ctx.stmts)
+        f = Function(ctx, self.scope.copy(), [arg.text for arg in ctx.args], ctx.stmts)
         if self.debug:
             self.debug_info.append(f)
         return f
@@ -143,8 +144,10 @@ class Visitor(YalangVisitor):
         f = self.scope.get(ident, None)
         if f is None:
             raise VisitorException(ctx, "Undefined variable {}", ident)
+        if f.typ != Expression.Type.FUNCTION:
+            raise VisitorException(ctx, "{} is not callable", ident)
         params = [self.visit(p) for p in ctx.params]
-        r = f.call(ctx, ident, self.scope.copy(), params)
+        r = f.call(ctx, ident, params)
         if self.debug:
             self.debug_info.append(r)
         return r
