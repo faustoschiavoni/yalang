@@ -29,13 +29,33 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YalangParser#stringLiteral.
-    def visitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+    # Visit a parse tree produced by YalangParser#fnGetStream.
+    def visitFnGetStream(self, ctx:YalangParser.FnGetStreamContext):
         return self.visitChildren(ctx)
 
 
     # Visit a parse tree produced by YalangParser#assignment.
     def visitAssignment(self, ctx:YalangParser.AssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#mathLow.
+    def visitMathLow(self, ctx:YalangParser.MathLowContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#nested.
+    def visitNested(self, ctx:YalangParser.NestedContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#streamWrite.
+    def visitStreamWrite(self, ctx:YalangParser.StreamWriteContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by YalangParser#stringLiteral.
+    def visitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
         return self.visitChildren(ctx)
 
 
@@ -54,13 +74,8 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by YalangParser#mathLow.
-    def visitMathLow(self, ctx:YalangParser.MathLowContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by YalangParser#nested.
-    def visitNested(self, ctx:YalangParser.NestedContext):
+    # Visit a parse tree produced by YalangParser#streamRead.
+    def visitStreamRead(self, ctx:YalangParser.StreamReadContext):
         return self.visitChildren(ctx)
 
 

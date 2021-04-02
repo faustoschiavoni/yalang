@@ -15,16 +15,22 @@ statement : expression
           | returnStmt
           ;
 
-expression  : NUMBER                                                                #numberLiteral
-            | STRING                                                                #stringLiteral
-            | '(' ((args+=ID ',')* args+=ID)? ')' '{' (stmts+=statement ';')+ '}'   #fnLiteral
-            | ID                                                                    #identifier
-            | ID '(' ((params+=expression ',')* params+=expression)? ')'            #fnCall
-            | '-' expression                                                        #unaryMinus
-            | '(' expression ')'                                                    #nested
-            | left=expression op=('*'|'/'|'%') right=expression                     #mathHigh
-            | left=expression op=('+'|'-')     right=expression                     #mathLow
-            | ID '=' expression                                                     #assignment
+expression  : NUMBER                                                                      #numberLiteral
+            | STRING                                                                      #stringLiteral
+            | ('<' (ins+=ID ',')* ins+=ID '>')?
+              '(' ((args+=ID ',')* args+=ID)? ')'
+              ('<' (outs+=ID ',')* outs+=ID '>')?
+              '{' (stmts+=statement ';')+ '}'                                             #fnLiteral
+            | ID                                                                          #identifier
+            | callee=expression '(' ((params+=expression ',')* params+=expression)? ')'   #fnCall
+            | left=expression '<' right=ID '>'                                            #fnGetStream
+            | '<<' expression                                                             #streamRead
+            | '-' expression                                                              #unaryMinus
+            | '(' expression ')'                                                          #nested
+            | left=expression op=('*'|'/'|'%') right=expression                           #mathHigh
+            | left=expression op=('+'|'-')     right=expression                           #mathLow
+            | ID '=' expression                                                           #assignment
+            | left=expression '>>' right=expression                                       #streamWrite
             ;
 
 printStmt   : '!' expression

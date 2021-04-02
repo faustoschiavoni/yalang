@@ -44,12 +44,12 @@ class YalangListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by YalangParser#stringLiteral.
-    def enterStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+    # Enter a parse tree produced by YalangParser#fnGetStream.
+    def enterFnGetStream(self, ctx:YalangParser.FnGetStreamContext):
         pass
 
-    # Exit a parse tree produced by YalangParser#stringLiteral.
-    def exitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+    # Exit a parse tree produced by YalangParser#fnGetStream.
+    def exitFnGetStream(self, ctx:YalangParser.FnGetStreamContext):
         pass
 
 
@@ -59,6 +59,42 @@ class YalangListener(ParseTreeListener):
 
     # Exit a parse tree produced by YalangParser#assignment.
     def exitAssignment(self, ctx:YalangParser.AssignmentContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#mathLow.
+    def enterMathLow(self, ctx:YalangParser.MathLowContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#mathLow.
+    def exitMathLow(self, ctx:YalangParser.MathLowContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#nested.
+    def enterNested(self, ctx:YalangParser.NestedContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#nested.
+    def exitNested(self, ctx:YalangParser.NestedContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#streamWrite.
+    def enterStreamWrite(self, ctx:YalangParser.StreamWriteContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#streamWrite.
+    def exitStreamWrite(self, ctx:YalangParser.StreamWriteContext):
+        pass
+
+
+    # Enter a parse tree produced by YalangParser#stringLiteral.
+    def enterStringLiteral(self, ctx:YalangParser.StringLiteralContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#stringLiteral.
+    def exitStringLiteral(self, ctx:YalangParser.StringLiteralContext):
         pass
 
 
@@ -89,21 +125,12 @@ class YalangListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by YalangParser#mathLow.
-    def enterMathLow(self, ctx:YalangParser.MathLowContext):
+    # Enter a parse tree produced by YalangParser#streamRead.
+    def enterStreamRead(self, ctx:YalangParser.StreamReadContext):
         pass
 
-    # Exit a parse tree produced by YalangParser#mathLow.
-    def exitMathLow(self, ctx:YalangParser.MathLowContext):
-        pass
-
-
-    # Enter a parse tree produced by YalangParser#nested.
-    def enterNested(self, ctx:YalangParser.NestedContext):
-        pass
-
-    # Exit a parse tree produced by YalangParser#nested.
-    def exitNested(self, ctx:YalangParser.NestedContext):
+    # Exit a parse tree produced by YalangParser#streamRead.
+    def exitStreamRead(self, ctx:YalangParser.StreamReadContext):
         pass
 
 

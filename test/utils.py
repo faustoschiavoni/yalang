@@ -8,7 +8,7 @@ def exec_ok(stmt):
 
 def exec_ko(stmt):
     try:
-        v = execute_string(stmt + ';', debug=True)
+        execute_string(stmt + ';', debug=True)
         return None
     except YalangException as e:
         return str(e)

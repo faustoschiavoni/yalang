@@ -14,7 +14,7 @@ class ParserErrorListener(ErrorListener):
         self.errs.append("line " + str(line) + ":" + str(column) + " " + msg)
 
 
-def execute_string(text, scope=Scope(), debug=False):
+def execute_string(text, scope=None, debug=False):
     lexer = YalangLexer(InputStream(text))
     stream = CommonTokenStream(lexer)
     errs = ParserErrorListener()
@@ -24,6 +24,8 @@ def execute_string(text, scope=Scope(), debug=False):
     program = parser.program()
     if parser.getNumberOfSyntaxErrors() > 0:
         raise ParseException('\n'.join(errs.errs))
+    if scope is None:
+        scope = Scope()
     visitor = Visitor(scope, debug=debug)
     visitor.visit(program)
     return visitor

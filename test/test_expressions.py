@@ -24,6 +24,7 @@ class TestAssignIdent(unittest.TestCase):
         self.assertEqual(exec_ok("a = 3; a + 4"), '7')
         self.assertEqual(exec_ok("a = b = 3; a + b"), '6')
 
+
 class TestFn(unittest.TestCase):
     def test_fn_simple(self):
         self.assertEqual(exec_ok('''
@@ -75,7 +76,7 @@ class TestFn(unittest.TestCase):
                 return (a + b + c) * d;
             };
             f(a, 2)
-        '''), 'line 7:12 f requires 3 args, 2 given')
+        '''), 'line 7:12 function requires 3 args, 2 given')
 
     def test_dead_code(self):
         self.assertEqual(exec_ok('''
@@ -146,4 +147,113 @@ class TestFn(unittest.TestCase):
         self.assertEqual(exec_ko('''
             n = 3;
             n(1)
-        '''), "line 3:12 n is not callable")
+        '''), "line 3:12 variable is not callable")
+
+
+class TestStream(unittest.TestCase):
+    def test_stream_in(self):
+        self.assertEqual(exec_ok('''
+            f = <in> (n) {
+                return n + << in;
+            };
+            1 >> f<in>;
+            f(18)
+        '''), '19')
+
+    def test_stream_out(self):
+        self.assertEqual(exec_ok('''
+            f = (s) <out> {
+                s >> out;
+            };
+            f('hello');
+            << f<out>
+        '''), "'hello'")
+
+    def test_connect_fns(self):
+        self.assertEqual(exec_ok('''
+            f = (n) <out> {
+                n + 1 >> out;
+            };
+            g = () <out> {
+                << f<out> + 1 >> out;
+            };
+            f(1);
+            g();
+            << g<out>
+        '''), '3')
+
+    def test_name_clash(self):
+        self.assertEqual(exec_ko('''
+            f = <a> () <a> { 1; }
+        '''), "line 2:16 Name clash between input and output streams")
+
+    def test_read_too_much(self):
+        self.assertEqual(exec_ko('''
+            f = (s) <out> {
+                s >> out;
+            };
+            f('hello');
+            << f<out>;
+            << f<out>
+        '''), "line 7:12 Attempted read from empty stream")
+
+    def test_read_illegal_rw(self):
+        self.assertEqual(exec_ko('''
+            f = <in> () <out> {
+                << out;
+            };
+            f()
+        '''), "line 3:16 Cannot read from output within function")
+        self.assertEqual(exec_ko('''
+            f = <in> () <out> {
+                1 >> in;
+            };
+            f()
+        '''), "line 3:16 Cannot write to input within function")
+        self.assertEqual(exec_ko('''
+            f = <in> () <out> {
+                1 >> out;
+            };
+            1 >> f<out>
+        '''), "line 5:12 Cannot write to output of another function")
+        self.assertEqual(exec_ko('''
+            f = <in> () <out> {
+                1 >> out;
+            };
+            << f<in>
+        '''), "line 5:12 Cannot read from input to another function")
+
+    def test_nested(self):
+        self.assertEqual(exec_ok('''
+            f = <in> (n) <out> {
+                g = <in> (n) <out> {
+                    << in * n >> out;
+                };
+                << in + n >> g<in>;
+                g(n + 1);
+                << g<out> >> out;
+            };
+            2 >> f<in>;
+            f(0.5);
+            << f<out>
+        '''), '3.75')
+        self.assertEqual(exec_ko('''
+            f = <in> (n) <out> {
+                g = <in> (n) <out> {
+                    1 >> out;
+                    1 >> in;
+                };
+                g(n + 1);
+            };
+            f(1)
+        '''), "line 5:20 Cannot write to input within function")
+        self.assertEqual(exec_ko('''
+            f = <in> (n) <out> {
+                g = <in> (n) <out> {
+                    1 >> out;
+                    << out;
+                };
+                g(n + 1);
+            };
+            f(1)
+        '''), "line 5:20 Cannot read from output within function")
