@@ -161,5 +161,14 @@ class YalangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by YalangParser#closeStmt.
+    def enterCloseStmt(self, ctx:YalangParser.CloseStmtContext):
+        pass
+
+    # Exit a parse tree produced by YalangParser#closeStmt.
+    def exitCloseStmt(self, ctx:YalangParser.CloseStmtContext):
+        pass
+
+
 
 del YalangParser

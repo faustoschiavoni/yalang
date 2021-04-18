@@ -1,8 +1,16 @@
 from enum import Enum
 
+from gevent import Greenlet
+from gevent.hub import get_hub
+from gevent.queue import Queue
+from gevent.exceptions import LoopExit
+
 from yalang.generated.YalangParser import YalangParser
 from yalang.generated.YalangVisitor import YalangVisitor
 from yalang.exceptions import VisitorException
+
+# Do not dump greenlet traces
+get_hub().exception_stream = None
 
 class Scope(dict):
     pass
@@ -10,10 +18,13 @@ class Scope(dict):
 
 class Expression(object):
     class Type(Enum):
+        VOID = -2
+        EOS = -1
         NUMBER = 1
         STRING = 2
         FUNCTION = 3
-        STREAM = 3
+        STREAM = 4
+        ASYNC_CALL = 5
 
     def __init__(self, value, typ):
         self.value = value
@@ -26,62 +37,114 @@ class Expression(object):
         return self.typ == self.Type.NUMBER
 
 
+# Use for determining if a stream has been closed.
+EOS = Expression(None, Expression.Type.EOS)
+VOID = Expression(None, Expression.Type.VOID)
+
+
+def call_fn(scope, body, async_fn=None, async_calls=None):
+    v = Visitor(scope, is_fn=True, async_fn=async_fn, async_calls=async_calls)
+    for stmt in body:
+        v.visit(stmt)
+        if v.return_value is not None:
+            return v.return_value
+    return VOID
+
+
 class Function(Expression):
     def __init__(self, ctx, scope, ins, args, outs, body):
         self.ctx = ctx
         if len(set(ins) & set(outs)) > 0:
             raise VisitorException(ctx, "Name clash between input and output streams")
         self.scope = scope
-        self.ins = {i: Stream(True) for i in ins}
+        self.ins = ins
         self.args = args
-        self.outs = {o: Stream(False) for o in outs}
+        self.outs = outs
+        self.is_async = len(ins) > 0 or len(outs) > 0
         self.body = body
+        self.exception = None
         self.typ = self.Type.FUNCTION
-        self.scope.update(self.ins)
-        self.scope.update(self.outs)
         self.value = None
 
-    def call(self, call_ctx, params):
+
+    def call(self, call_ctx, params, async_calls):
         if len(params) != len(self.args):
             raise VisitorException(call_ctx, "function requires {} args, {} given", len(self.args), len(params))
+
+        scope = self.scope.copy()
         for k, v in zip(self.args, params):
-            self.scope[k] = v
-        v = Visitor(self.scope, fn=self)
-        for stmt in self.body:
-            v.visit(stmt)
-            if v.return_value is not None:
-                return v.return_value
+            scope[k] = v
+
+        if self.is_async:
+            ac = AsyncCall(scope, self.ins, self.outs, self.body)
+            ac.start(async_calls)
+            return ac
+        else:
+            return call_fn(scope, self.body, async_calls=async_calls)
 
 
-# TODO: Do something more sophisticated.
 class Stream(Expression):
     def __init__(self, io:bool):
         self.io = io
         self.typ = self.Type.STREAM
-        self.elements = []
+        self.q = Queue()
+        self.closed = False
         self.value = None
 
     def is_in(self):
         return self.io
 
-    def size(self):
-        return len(self.elements)
-
     def read(self):
-        return self.elements.pop()
+        if self.closed:
+            return None
+        e = self.q.get()
+        if e == EOS:
+            self.closed = True
+            return None
+        return e
 
     def write(self, e):
-        return self.elements.insert(0, e)
+        return self.q.put(e)
+
+
+class AsyncCall(Expression):
+    def __init__(self, scope, ins, outs, body):
+        self.scope = scope
+        self.body = body
+        self.ins = {i: Stream(True) for i in ins}
+        self.outs = {o: Stream(False) for o in outs}
+        self.scope.update(self.ins)
+        self.scope.update(self.outs)
+        self.typ = self.Type.ASYNC_CALL
+        self.value = None
+
+    def start(self, async_calls):
+        self.g = Greenlet.spawn(call_fn, self.scope, self.body, async_fn=self, async_calls=async_calls)
+        async_calls.append(self)
+
+        # def exception_callback(glet):
+        #     raise glet.exception
+        #
+        # self.g.link_exception(exception_callback)
+        return self.g
+
+    def wait(self):
+        return self.g.get()
 
 
 class Visitor(YalangVisitor):
-    def __init__(self, scope, debug=False, fn=None):
+    def __init__(self, scope, debug=False, is_fn=False, async_fn=None, async_calls=None):
         super().__init__()
         self.errs = []
+        self.async_calls = async_calls
+        if self.async_calls is None:
+            self.async_calls = []
         self.scope = scope
         self.debug = debug
         self.debug_info = []
-        self.fn = fn
+        self.async_fn = async_fn
+        self.is_fn = is_fn or self.async_fn is not None
+        self.is_main = not self.is_fn
         self.return_value = None
 
     def checkErrors(self):
@@ -95,6 +158,14 @@ class Visitor(YalangVisitor):
 
     def visitErrorNode(self, errNode):
         self.errs.append(errNode)
+
+
+    def visitProgram(self, ctx:YalangParser.ProgramContext):
+        r = self.visitChildren(ctx)
+        if self.is_main:
+            for ac in self.async_calls:
+                ac.wait()
+        return r
 
     def visitUnaryMinus(self, ctx:YalangParser.UnaryMinusContext):
         expr = self.visit(ctx.expression())
@@ -180,13 +251,13 @@ class Visitor(YalangVisitor):
         if f.typ != Expression.Type.FUNCTION:
             raise VisitorException(ctx, "variable is not callable")
         params = [self.visit(p) for p in ctx.params]
-        r = f.call(ctx, params)
+        r = f.call(ctx, params, self.async_calls)
         if self.debug:
             self.debug_info.append(r)
         return r
 
     def visitReturnStmt(self, ctx:YalangParser.ReturnStmtContext):
-        if self.fn is None:
+        if not self.is_fn:
             raise VisitorException(ctx, "Return statement is allowed only in functions")
         e = self.visit(ctx.expression())
         self.return_value = e
@@ -196,7 +267,7 @@ class Visitor(YalangVisitor):
 
     def visitFnGetStream(self, ctx:YalangParser.FnGetStreamContext):
         l = self.visit(ctx.left)
-        if l.typ != Expression.Type.FUNCTION:
+        if l.typ != Expression.Type.ASYNC_CALL:
             raise VisitorException(ctx, "Cannot get stream from {}", l.typ)
         ident = ctx.right.text
         s = l.ins.get(ident, None)
@@ -212,13 +283,16 @@ class Visitor(YalangVisitor):
         s = self.visit(ctx.expression())
         if s.typ != Expression.Type.STREAM:
             raise VisitorException(ctx, "Cannot read from {}", l.typ)
-        if self.fn is None and s.is_in():
+        if self.async_fn is None and s.is_in():
             raise VisitorException(ctx, "Cannot read from input to another function")
-        if self.fn is not None and s in self.fn.outs.values():
+        if self.async_fn is not None and s in self.async_fn.outs.values():
             raise VisitorException(ctx, "Cannot read from output within function")
-        if s.size() == 0:
+        try:
+            e = s.read()
+        except LoopExit as ex:
+            raise VisitorException(ctx, "Deadlock detected")
+        if e is None:
             raise VisitorException(ctx, "Attempted read from empty stream")
-        e = s.read()
         if self.debug:
             self.debug_info.append(e)
         return e
@@ -227,11 +301,17 @@ class Visitor(YalangVisitor):
         s = self.visit(ctx.right)
         if s.typ != Expression.Type.STREAM:
             raise VisitorException(ctx, "Cannot write to {}", l.typ)
-        if self.fn is None and not s.is_in():
+        if self.async_fn is None and not s.is_in():
             raise VisitorException(ctx, "Cannot write to output of another function")
-        if self.fn is not None and s in self.fn.ins.values():
+        if self.async_fn is not None and s in self.async_fn.ins.values():
             raise VisitorException(ctx, "Cannot write to input within function")
         e = self.visit(ctx.left)
         if self.debug:
             self.debug_info.append(e)
         return s.write(e)
+
+    def visitCloseStmt(self, ctx:YalangParser.CloseStmtContext):
+        s = self.visit(ctx.stream)
+        if s.typ != Expression.Type.STREAM:
+            raise VisitorException(ctx, "Cannot close {}", s.typ)
+        s.write(EOS)

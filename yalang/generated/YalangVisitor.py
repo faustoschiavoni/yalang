@@ -94,5 +94,10 @@ class YalangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by YalangParser#closeStmt.
+    def visitCloseStmt(self, ctx:YalangParser.CloseStmtContext):
+        return self.visitChildren(ctx)
+
+
 
 del YalangParser

@@ -13,6 +13,7 @@ program   : (statement ';')+ EOF;
 statement : expression
           | printStmt
           | returnStmt
+          | closeStmt
           ;
 
 expression  : NUMBER                                                                      #numberLiteral
@@ -37,4 +38,7 @@ printStmt   : '!' expression
             ;
 
 returnStmt  : 'return' expression
+            ;
+
+closeStmt   : 'close' stream=expression
             ;
